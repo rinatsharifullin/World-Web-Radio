@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 function App() {
   const [stations, setStations] = useState([]);
 
-  const GetRussianSatations = async () => {
+  const GetRussianStations = async () => {
     try {
       const response = await axios.request(
         "http://all.api.radio-browser.info/json/stations/bycountry/russia"
@@ -16,7 +16,7 @@ function App() {
     }
   };
   useEffect(() => {
-    GetRussianSatations();
+    GetRussianStations();
   }, []);
 
   var audio = new Audio();
