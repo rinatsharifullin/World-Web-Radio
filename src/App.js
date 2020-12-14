@@ -22,11 +22,6 @@ function App() {
   var audio = new Audio();
 
   //Read now playing
-  var internetradio = require("node-internet-radio");
-  var testStream = "";
-  internetradio.getStationInfo(testStream, function (error, station) {
-    console.log(station);
-  });
 
   const playMe = (e) => {
     // const myUrl = stations.filter((item) => e.target.innerHTML === item.name);
@@ -34,10 +29,6 @@ function App() {
     audio.pause();
     audio = new Audio(e.target.id);
     audio.play();
-    testStream = e.target.id;
-    internetradio.getStationInfo(testStream, function (error, station) {
-      console.log(station);
-    });
   };
 
   const stopMe = () => {
