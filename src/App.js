@@ -8,7 +8,7 @@ function App() {
   const GetRussianStations = async () => {
     try {
       const response = await axios.request(
-        "http://all.api.radio-browser.info/json/stations/bycountry/russia"
+        "https://all.api.radio-browser.info/json/stations/bycountry/russia"
       );
       setStations(response.data);
     } catch (e) {
