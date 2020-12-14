@@ -8,7 +8,7 @@ function App() {
   const GetRussianStations = async () => {
     try {
       const response = await axios.request(
-        "https://all.api.radio-browser.info/json/stations/bycountry/russia"
+        "https://de1.api.radio-browser.info/json/stations/bycountry/russia"
       );
       setStations(response.data);
     } catch (e) {
@@ -23,12 +23,16 @@ function App() {
 
   //Read now playing
 
-  const playMe = (e) => {
+  const playMe = async (e) => {
     // const myUrl = stations.filter((item) => e.target.innerHTML === item.name);
     console.log(e.target.id);
     audio.pause();
-    audio = new Audio(e.target.id);
-    audio.play();
+    try {
+      audio = new Audio(e.target.id);
+      audio.play();
+    } catch (error) {
+      console.log("Error happens - ", error);
+    }
   };
 
   const stopMe = () => {
@@ -38,13 +42,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>World Web Radio</h1>
+        <button onClick={stopMe}>Stop</button>
         <ul>
           {stations.map((item) => (
             <li>
               <button id={item.url_resolved} onClick={playMe}>
                 {item.name}
               </button>
-              <button onClick={stopMe}>Stop</button>
               {/* <img
                 src={item.favicon}
                 width="50"
