@@ -61,7 +61,7 @@ function App() {
                 alt={item.name}
               ></img> */}
               <p>Bitrate - {item.bitrate}</p>
-              <a href={item.homepage} target="_blank">
+              <a href={item.homepage} target="_blank" rel="noreferrer">
                 Home page
               </a>
             </li>
