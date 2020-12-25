@@ -1,14 +1,36 @@
+import React from "react";
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+// import Button from "@material-ui/core/Button";
 
 import { useEffect, useState } from "react";
 
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      height: 100,
+      width: 100,
+    },
+
+    control: {
+      padding: theme.spacing(2),
+    },
+  })
+);
+
 function App() {
   const [stations, setStations] = useState([]);
+  const classes = useStyles();
 
   const GetRussianStations = async () => {
     try {
       const response = await axios.request(
-        "https://de1.api.radio-browser.info/json/stations/bycountry/russia"
+        "https://de1.api.radio-browser.info/json/stations/bycountry/russian"
       );
       setStations(response.data);
     } catch (e) {
@@ -40,28 +62,42 @@ function App() {
   };
   return (
     <div className="App">
+      <Grid container className={classes.root} spacing={1}>
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={1}>
+            {stations
+              .filter((item) => item.url_resolved.slice(-4) !== "m3u8")
+              .map((item) => (
+                <Grid item key={item.changeuuid}>
+                  <Paper className={classes.paper}>
+                    <button
+                      id={item.url_resolved}
+                      onClick={playMe}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {item.name}
+                      {/* <img
+                      src={item.favicon}
+                      width="100"
+                      heigth="100"
+                      alt={item.name}
+                    ></img> */}
+                    </button>
+                  </Paper>
+                </Grid>
+              ))}
+          </Grid>
+        </Grid>
+      </Grid>
+
       <header className="App-header">
         <h1>World Web Radio</h1>
         <button onClick={stopMe}>Stop</button>
-        <ul>
-          {stations.map((item) => (
-            <li>
-              <button id={item.url_resolved} onClick={playMe}>
-                {item.name}
-              </button>
-              {/* <img
-                src={item.favicon}
-                width="50"
-                heigth="50"
-                alt={item.name}
-              ></img> */}
-              <p>Bitrate - {item.bitrate}</p>
-              <a href={item.homepage} target="_blank" rel="noreferrer">
-                Home page
-              </a>
-            </li>
-          ))}
-        </ul>
+        <ul></ul>
       </header>
     </div>
   );
