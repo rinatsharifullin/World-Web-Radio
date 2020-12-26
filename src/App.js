@@ -3,6 +3,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+import Background from "./radio.png";
 // import Button from "@material-ui/core/Button";
 
 import { useEffect, useState } from "react";
@@ -62,43 +63,58 @@ function App() {
   };
   return (
     <div className="App">
+      <header className="App-header">
+        <h1 style={{ textAlign: "center" }}>World Web Radio</h1>
+      </header>
       <Grid container className={classes.root} spacing={1}>
         <Grid item xs={12}>
-          <Grid container justify="center" spacing={1}>
+          <Grid container justify="center" spacing={2}>
             {stations
               .filter((item) => item.url_resolved.slice(-4) !== "m3u8")
               .map((item) => (
-                <Grid item key={item.changeuuid}>
-                  <Paper className={classes.paper}>
-                    <button
-                      id={item.url_resolved}
-                      onClick={playMe}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        overflow: "hidden",
-                      }}
+                <>
+                  <Grid item key={item.changeuuid}>
+                    <Paper className={classes.paper}>
+                      <button
+                        id={item.url_resolved}
+                        onClick={playMe}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          overflow: "hidden",
+                          position: "relative",
+                        }}
+                      >
+                        {item.name}
+                        <button
+                          onClick={stopMe}
+                          style={{ position: "absolute", top: 0, left: 0 }}
+                        >
+                          Stop
+                        </button>
+                      </button>
+                    </Paper>
+                    <Paper
+                      className={classes.paper}
+                      style={{ overflow: "hidden" }}
                     >
-                      {item.name}
-                      {/* <img
-                      src={item.favicon}
-                      width="100"
-                      heigth="100"
-                      alt={item.name}
-                    ></img> */}
-                    </button>
-                  </Paper>
-                </Grid>
+                      <img
+                        src={item.favicon}
+                        width="100%"
+                        heigth="100%"
+                        alt={item.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = Background;
+                        }}
+                      ></img>
+                    </Paper>
+                  </Grid>
+                </>
               ))}
           </Grid>
         </Grid>
       </Grid>
-
-      <header className="App-header">
-        <h1>World Web Radio</h1>
-        <button onClick={stopMe}>Stop</button>
-        <ul></ul>
-      </header>
     </div>
   );
 }
