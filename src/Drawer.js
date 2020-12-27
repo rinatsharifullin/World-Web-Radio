@@ -131,6 +131,16 @@ export default function MiniDrawer() {
       console.log(e);
     }
   };
+  const GetLastClicksStations = async () => {
+    try {
+      const response = await axios.request(
+        "https://de1.api.radio-browser.info/json/stations/lastclick/33"
+      );
+      setStations(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const GetCountryList = async () => {
     try {
@@ -144,8 +154,8 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
-    // GetRussianStations(myStation);
     GetCountryList();
+    GetLastClicksStations();
   }, []);
 
   var audio = new Audio();
