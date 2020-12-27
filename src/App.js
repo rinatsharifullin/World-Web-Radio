@@ -31,7 +31,7 @@ function App() {
   const GetRussianStations = async () => {
     try {
       const response = await axios.request(
-        "https://de1.api.radio-browser.info/json/stations/bycountry/russian"
+        "https://de1.api.radio-browser.info/json/stations/bycountry/russia"
       );
       setStations(response.data);
     } catch (e) {
@@ -63,9 +63,6 @@ function App() {
   };
   return (
     <div className="App">
-      <header className="App-header">
-        <h1 style={{ textAlign: "center" }}>World Web Radio</h1>
-      </header>
       <Grid container className={classes.root} spacing={1}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={2}>
