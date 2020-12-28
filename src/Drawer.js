@@ -273,6 +273,7 @@ export default function MiniDrawer() {
             </div>
             <InputBase
               onChange={HandleSearch}
+              onClick={(e) => (e.target.value = "")}
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
