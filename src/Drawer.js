@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { fade, makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -14,6 +14,9 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import TextField from "@material-ui/core/TextField";
+import SearchIcon from "@material-ui/icons/Search";
+import InputBase from "@material-ui/core/InputBase";
 
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -25,8 +28,48 @@ import { useEffect, useState } from "react";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
   root: {
     display: "flex",
+    justifyContent: "space-between",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -99,7 +142,7 @@ export default function MiniDrawer() {
   const [stations, setStations] = useState([]);
   const [counties, setCounties] = useState([]);
   const [stranaDisplay, setstranaDisplay] = useState("");
-
+  const [search, setSearch] = useState("");
   // const [myStation, setStation] = useState("ireland");
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
@@ -112,11 +155,32 @@ export default function MiniDrawer() {
     setSelectedIndex(index);
     stopMe();
     GetCountryStations(strana.name);
-    setstranaDisplay(strana.name);
+    setstranaDisplay(
+      "- " + strana.name + " - " + strana.stationcount + " Stations"
+    );
+    console.log(strana);
   };
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const HandleSearch = (e) => {
+    console.log(e.target.value);
+    if (e.target.value.length > 3) GetSearchStations(e.target.value);
+  };
+  const GetSearchStations = async (myInnerStation) => {
+    audio.pause();
+    try {
+      console.log(myInnerStation);
+      const response = await axios.request(
+        "https://de1.api.radio-browser.info/json/stations/search?name=" +
+          myInnerStation
+      );
+      setStations(response.data);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const GetCountryStations = async (myInnerStation) => {
@@ -127,7 +191,6 @@ export default function MiniDrawer() {
           myInnerStation
       );
       setStations(response.data);
-      console.log(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -159,7 +222,7 @@ export default function MiniDrawer() {
     GetLastClicksStations();
   }, []);
 
-  var audio = new Audio();
+  const audio = new Audio();
 
   //Read now playing
 
@@ -168,7 +231,7 @@ export default function MiniDrawer() {
     console.log(e.target.id);
     audio.pause();
     try {
-      audio = new Audio(e.target.id);
+      audio.src = e.target.id;
       audio.play();
     } catch (error) {
       console.log("Error happens - ", error);
@@ -188,7 +251,7 @@ export default function MiniDrawer() {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
+        <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -203,6 +266,21 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap>
             World Web Radio {stranaDisplay}
           </Typography>
+
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              onChange={HandleSearch}
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
