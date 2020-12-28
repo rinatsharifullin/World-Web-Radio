@@ -127,6 +127,7 @@ export default function MiniDrawer() {
           myInnerStation
       );
       setStations(response.data);
+      console.log(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -249,6 +250,7 @@ export default function MiniDrawer() {
             <Grid item xs={12}>
               <Grid container justify="center" spacing={2}>
                 {stations
+                  .sort((a, b) => b.clickcount - a.clickcount)
                   .filter((item) => item.url_resolved.slice(-4) !== "m3u8")
                   .map((item) => (
                     <>
