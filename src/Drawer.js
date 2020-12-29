@@ -14,7 +14,6 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import TextField from "@material-ui/core/TextField";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 
@@ -142,8 +141,6 @@ export default function MiniDrawer() {
   const [stations, setStations] = useState([]);
   const [counties, setCounties] = useState([]);
   const [stranaDisplay, setstranaDisplay] = useState("");
-  const [search, setSearch] = useState("");
-  // const [myStation, setStation] = useState("ireland");
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [open, setOpen] = React.useState(true);
