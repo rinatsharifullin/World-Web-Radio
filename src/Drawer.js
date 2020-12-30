@@ -18,10 +18,15 @@ import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
 
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import Background from "./radio.png";
-
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useEffect, useState } from "react";
 
 const drawerWidth = 240;
@@ -70,6 +75,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  rootCard: {
+    display: "flex",
+    width: 250,
+    height: 100,
+    justifyContent: "space-between",
+    margin: 5,
+  },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
@@ -109,9 +121,9 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     overflowX: "hidden",
-    width: theme.spacing(7) + 1,
+    width: theme.spacing(0) + 1,
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9) + 1,
+      width: theme.spacing(0) + 1,
     },
   },
   paper: {
@@ -134,6 +146,28 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  contentCard: {
+    // flex: "1 0 auto",
+    paddingTop: 0,
+  },
+  details: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  playIcon: {
+    height: 23,
+    width: 23,
+  },
+  controls: {
+    display: "flex",
+    alignItems: "center",
+    // paddingLeft: theme.spacing(1),
+    // paddingBottom: theme.spacing(1),
+  },
+  cover: {
+    width: 100,
+    height: 100,
+  },
 }));
 
 export default function MiniDrawer() {
@@ -143,10 +177,11 @@ export default function MiniDrawer() {
   const [stranaDisplay, setstranaDisplay] = useState("");
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+  const audio = new Audio();
 
   const handleMenuItemClick = (index, strana) => {
     setSelectedIndex(index);
@@ -156,6 +191,7 @@ export default function MiniDrawer() {
       "- " + strana.name + " - " + strana.stationcount + " Stations"
     );
     console.log(strana);
+    setOpen(false);
   };
 
   const handleDrawerClose = () => {
@@ -167,7 +203,7 @@ export default function MiniDrawer() {
     if (e.target.value.length > 3) GetSearchStations(e.target.value);
   };
   const GetSearchStations = async (myInnerStation) => {
-    audio.pause();
+    // audio.pause();
     try {
       console.log(myInnerStation);
       const response = await axios.request(
@@ -220,16 +256,14 @@ export default function MiniDrawer() {
     GetLastClicksStations();
   }, []);
 
-  const audio = new Audio();
-
   //Read now playing
 
   const playMe = async (e) => {
     // const myUrl = stations.filter((item) => e.target.innerHTML === item.name);
-    console.log(e.target.id);
-    audio.pause();
+    // console.log(e.target.id);
+    // audio.pause();
     try {
-      audio.src = e.target.id;
+      audio.src = e;
       audio.play();
     } catch (error) {
       console.log("Error happens - ", error);
@@ -237,7 +271,7 @@ export default function MiniDrawer() {
   };
 
   const stopMe = () => {
-    audio.pause();
+    // audio.pause();
   };
 
   return (
@@ -305,21 +339,34 @@ export default function MiniDrawer() {
           </IconButton>
         </div>
         <Divider />
-        <List>
-          {counties
-            .sort((a, b) => b.stationcount - a.stationcount)
-            .map((strana, index) => (
-              <ListItem
-                key={strana.name}
-                selected={index === selectedIndex}
-                button
-                onClick={() => handleMenuItemClick(index, strana)}
-              >
-                <ListItemText primary={strana.name} />
-                <ListItemText />
-              </ListItem>
-            ))}
-        </List>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography className={classes.heading}>
+              Radio by Country
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <List>
+              {counties
+                .sort((a, b) => b.stationcount - a.stationcount)
+                .map((strana, index) => (
+                  <ListItem
+                    key={strana.name}
+                    selected={index === selectedIndex}
+                    button
+                    onClick={() => handleMenuItemClick(index, strana)}
+                  >
+                    <ListItemText primary={strana.name} />
+                    <ListItemText />
+                  </ListItem>
+                ))}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
@@ -332,45 +379,34 @@ export default function MiniDrawer() {
                   .sort((a, b) => b.clickcount - a.clickcount)
                   .filter((item) => item.url_resolved.slice(-4) !== "m3u8")
                   .map((item) => (
-                    <>
-                      <Grid item key={item.changeuuid}>
-                        <Paper className={classes.paper}>
-                          <button
-                            id={item.url_resolved}
-                            onClick={playMe}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              overflow: "hidden",
-                              position: "relative",
-                            }}
+                    <Card className={classes.rootCard} key={item.changeuuid}>
+                      <div className={classes.details}>
+                        <div className={classes.controls}>
+                          <IconButton
+                            aria-label="play/pause"
+                            onClick={() => playMe(item.url_resolved)}
                           >
+                            <PlayArrowIcon className={classes.playIcon} />
+                          </IconButton>
+                        </div>
+                        <CardContent className={classes.contentCard}>
+                          <Typography component="div" variant="body1">
                             {item.name}
-                            <button
-                              onClick={stopMe}
-                              style={{ position: "absolute", top: 0, left: 0 }}
-                            >
-                              Stop
-                            </button>
-                          </button>
-                        </Paper>
-                        <Paper
-                          className={classes.paper}
-                          style={{ overflow: "hidden" }}
-                        >
-                          <img
-                            src={item.favicon}
-                            width="100%"
-                            heigth="100%"
-                            alt={item.name}
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = Background;
-                            }}
-                          ></img>
-                        </Paper>
-                      </Grid>
-                    </>
+                          </Typography>
+                        </CardContent>
+                      </div>
+                      <img
+                        style={{ objectFit: "contain" }}
+                        src={item.favicon}
+                        width="100"
+                        heigth="100"
+                        alt={item.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = Background;
+                        }}
+                      ></img>
+                    </Card>
                   ))}
               </Grid>
             </Grid>
