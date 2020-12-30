@@ -254,6 +254,7 @@ export default function MiniDrawer() {
   const playMe = async (e) => {
     try {
       var source = document.getElementById("audioSource");
+      console.log(e);
       source.src = e;
       audio.load(); //call this to just preload the audio without playing
       audio.play(); //call this to play the song right away
