@@ -156,8 +156,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   playIcon: {
-    height: 23,
-    width: 23,
+    height: 35,
+    width: 35,
+    flex: "0 0 auto",
   },
   controls: {
     display: "flex",
@@ -303,6 +304,7 @@ export default function MiniDrawer() {
             <source id="audioSource" src="" />
           </audio>
           <Fab
+            className={classes.playIcon}
             color="secondary"
             aria-label="pause"
             onClick={stopMe}
