@@ -413,7 +413,8 @@ export default function MiniDrawer() {
                         </CardContent>
                       </div>
                       <img
-                        style={{ objectFit: "contain" }}
+                        onClick={() => window.open(item.homepage, "_blank")}
+                        style={{ objectFit: "contain", cursor: "pointer" }}
                         src={item.favicon}
                         width="100"
                         heigth="100"
