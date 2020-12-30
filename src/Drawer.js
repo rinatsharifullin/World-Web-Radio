@@ -209,6 +209,7 @@ export default function MiniDrawer() {
         "https://de1.api.radio-browser.info/json/countries"
       );
       setCounties(response.data);
+      // console.log(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -305,17 +306,19 @@ export default function MiniDrawer() {
         </div>
         <Divider />
         <List>
-          {counties.map((strana, index) => (
-            <ListItem
-              key={strana.name}
-              selected={index === selectedIndex}
-              button
-              onClick={() => handleMenuItemClick(index, strana)}
-            >
-              <ListItemText primary={strana.name} />
-              <ListItemText />
-            </ListItem>
-          ))}
+          {counties
+            .sort((a, b) => b.stationcount - a.stationcount)
+            .map((strana, index) => (
+              <ListItem
+                key={strana.name}
+                selected={index === selectedIndex}
+                button
+                onClick={() => handleMenuItemClick(index, strana)}
+              >
+                <ListItemText primary={strana.name} />
+                <ListItemText />
+              </ListItem>
+            ))}
         </List>
       </Drawer>
       <main className={classes.content}>
