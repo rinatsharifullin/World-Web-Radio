@@ -28,9 +28,10 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { useEffect, useState } from "react";
+import PauseIcon from "@material-ui/icons/Pause";
+import Fab from "@material-ui/core/Fab";
 
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
@@ -181,16 +182,12 @@ export default function MiniDrawer() {
   const handleDrawerOpen = () => {
     setOpen(true);
   };
-  const audio = new Audio();
-
+  const audio = document.getElementById("audio");
+  const [PlayButton, setPlayButton] = useState(true);
   const handleMenuItemClick = (index, strana) => {
     setSelectedIndex(index);
-    stopMe();
     GetCountryStations(strana.name);
-    setstranaDisplay(
-      "- " + strana.name + " - " + strana.stationcount + " Stations"
-    );
-    console.log(strana);
+    setstranaDisplay(strana.name + " - " + strana.stationcount + " Stations");
     setOpen(false);
   };
 
@@ -199,13 +196,10 @@ export default function MiniDrawer() {
   };
 
   const HandleSearch = (e) => {
-    console.log(e.target.value);
     if (e.target.value.length > 3) GetSearchStations(e.target.value);
   };
   const GetSearchStations = async (myInnerStation) => {
-    // audio.pause();
     try {
-      console.log(myInnerStation);
       const response = await axios.request(
         "https://de1.api.radio-browser.info/json/stations/search?name=" +
           myInnerStation
@@ -218,7 +212,6 @@ export default function MiniDrawer() {
 
   const GetCountryStations = async (myInnerStation) => {
     try {
-      console.log(myInnerStation);
       const response = await axios.request(
         "https://de1.api.radio-browser.info/json/stations/bycountry/" +
           myInnerStation
@@ -245,7 +238,6 @@ export default function MiniDrawer() {
         "https://de1.api.radio-browser.info/json/countries"
       );
       setCounties(response.data);
-      // console.log(response.data);
     } catch (e) {
       console.log(e);
     }
@@ -259,19 +251,25 @@ export default function MiniDrawer() {
   //Read now playing
 
   const playMe = async (e) => {
-    // const myUrl = stations.filter((item) => e.target.innerHTML === item.name);
-    // console.log(e.target.id);
-    // audio.pause();
     try {
-      audio.src = e;
-      audio.play();
+      var source = document.getElementById("audioSource");
+      source.src = e;
+      audio.load(); //call this to just preload the audio without playing
+      audio.play(); //call this to play the song right away
+      setPlayButton(false);
     } catch (error) {
       console.log("Error happens - ", error);
     }
   };
 
   const stopMe = () => {
-    // audio.pause();
+    if (!audio.paused) {
+      audio.pause();
+      setPlayButton(true);
+    } else {
+      audio.play();
+      setPlayButton(false);
+    }
   };
 
   return (
@@ -296,9 +294,22 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            World Web Radio {stranaDisplay}
+            World Web Radio
           </Typography>
-
+          <Typography variant="h6" noWrap>
+            {stranaDisplay}
+          </Typography>
+          <audio id="audio">
+            <source id="audioSource" src="" />
+          </audio>
+          <Fab
+            color="secondary"
+            aria-label="pause"
+            onClick={stopMe}
+            size="small"
+          >
+            {PlayButton ? <PlayArrowIcon /> : <PauseIcon />}
+          </Fab>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -384,9 +395,12 @@ export default function MiniDrawer() {
                         <div className={classes.controls}>
                           <IconButton
                             aria-label="play/pause"
-                            onClick={() => playMe(item.url_resolved)}
+                            onClick={() => {
+                              setstranaDisplay(item.name);
+                              playMe(item.url_resolved);
+                            }}
                           >
-                            <PlayArrowIcon className={classes.playIcon} />
+                            <PlayArrowIcon />
                           </IconButton>
                         </div>
                         <CardContent className={classes.contentCard}>
