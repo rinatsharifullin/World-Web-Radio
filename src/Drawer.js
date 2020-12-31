@@ -176,7 +176,7 @@ export default function MiniDrawer() {
   const classes = useStyles();
   const [stations, setStations] = useState([]);
   const [counties, setCounties] = useState([]);
-  const [stranaDisplay, setstranaDisplay] = useState("");
+  const [stranaDisplay, setstranaDisplay] = useState("World Web Radio");
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [open, setOpen] = React.useState(false);
@@ -257,6 +257,7 @@ export default function MiniDrawer() {
       console.log(e);
       source.src = e;
       audio.load(); //call this to just preload the audio without playing
+      audio.crossOrigin = "anonymous";
       audio.play(); //call this to play the song right away
       setPlayButton(false);
     } catch (error) {
@@ -295,9 +296,7 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            World Web Radio
-          </Typography>
+
           <Typography variant="h6" noWrap>
             {stranaDisplay}
           </Typography>
