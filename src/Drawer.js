@@ -16,6 +16,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import SearchIcon from "@material-ui/icons/Search";
 import InputBase from "@material-ui/core/InputBase";
+import Tooltip from "@material-ui/core/Tooltip";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
@@ -208,7 +210,7 @@ export default function MiniDrawer() {
       );
       setStations(response.data);
     } catch (e) {
-      console.log(e);
+      console.log("Error happens in HandleSearch - ", e);
     }
   };
 
@@ -220,7 +222,7 @@ export default function MiniDrawer() {
       );
       setStations(response.data);
     } catch (e) {
-      console.log(e);
+      console.log("Error happens in GetCountryStations - ", e);
     }
   };
   const GetLastClicksStations = async () => {
@@ -230,7 +232,7 @@ export default function MiniDrawer() {
       );
       setStations(response.data);
     } catch (e) {
-      console.log(e);
+      console.log("Error happens in GetLastClicksStations - ", e);
     }
   };
 
@@ -241,7 +243,7 @@ export default function MiniDrawer() {
       );
       setCounties(response.data);
     } catch (e) {
-      console.log(e);
+      console.log("Error happens in GetCountryList - ", e);
     }
   };
 
@@ -251,6 +253,25 @@ export default function MiniDrawer() {
   }, []);
 
   //Read now playing
+  var newWindow = window;
+  const openInNewTab = (url, name, favicon) => {
+    newWindow = window.open(url, "radio", "width=300,height=100");
+    // alert(newWindow.location.href);
+    // newWindow.document.write("Privet");
+    var tmp = newWindow.document;
+    tmp.write("<html><head><title>" + name + "</title>");
+    tmp.write("</head><body> ");
+
+    tmp.write(
+      "<audio id='audio' controls autoplay>    <source id='audioSource' src='" +
+        url +
+        " ' />  </audio>"
+    );
+    tmp.write("</body></html>");
+    tmp.close();
+    // if (newWindow) newWindow.opener = null;
+    // return null;
+  };
 
   const playMe = async (e) => {
     try {
@@ -262,7 +283,7 @@ export default function MiniDrawer() {
       audio.play(); //call this to play the song right away
       setPlayButton(false);
     } catch (error) {
-      console.log("Error happens - ", error);
+      console.log("Error happens in playMe - ", error);
     }
   };
 
@@ -405,6 +426,21 @@ export default function MiniDrawer() {
                           >
                             <PlayArrowIcon />
                           </IconButton>
+                          <Tooltip title="Play in pop-up window">
+                            <IconButton
+                              aria-label="play/pause"
+                              onClick={() => {
+                                setstranaDisplay(item.name);
+                                openInNewTab(
+                                  item.url_resolved,
+                                  item.name,
+                                  item.favicon
+                                );
+                              }}
+                            >
+                              <OpenInNewIcon />
+                            </IconButton>
+                          </Tooltip>
                         </div>
                         <CardContent className={classes.contentCard}>
                           <Typography component="div" variant="body1">
