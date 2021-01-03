@@ -183,6 +183,7 @@ export default function MiniDrawer() {
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [open, setOpen] = React.useState(false);
+  const [offset, setOffset] = useState(0);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -250,18 +251,23 @@ export default function MiniDrawer() {
   useEffect(() => {
     GetCountryList();
     GetLastClicksStations();
-  }, []);
+    window.onscroll = () => {
+      setOffset(window.pageYOffset);
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight
+      ) {
+        alert("At the bottom!");
+      }
+    };
+  }, [offset]);
 
-  //Read now playing
   var newWindow = window;
   const openInNewTab = (url, name, favicon) => {
     newWindow = window.open(url, "radio", "width=300,height=100");
-    // alert(newWindow.location.href);
-    // newWindow.document.write("Privet");
     var tmp = newWindow.document;
     tmp.write("<html><head><title>" + name + "</title>");
     tmp.write("</head><body> ");
-
     tmp.write(
       "<audio id='audio' controls autoplay>    <source id='audioSource' src='" +
         url +
@@ -269,8 +275,6 @@ export default function MiniDrawer() {
     );
     tmp.write("</body></html>");
     tmp.close();
-    // if (newWindow) newWindow.opener = null;
-    // return null;
   };
 
   const playMe = async (e) => {
@@ -294,6 +298,13 @@ export default function MiniDrawer() {
     } else {
       audio.play();
       setPlayButton(false);
+    }
+  };
+
+  const onScroll = () => {
+    console.log("scroll");
+    if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+      alert("At the bottom!");
     }
   };
 
