@@ -301,12 +301,12 @@ export default function MiniDrawer() {
     }
   };
 
-  const onScroll = () => {
-    console.log("scroll");
-    if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
-      alert("At the bottom!");
-    }
-  };
+  // const onScroll = () => {
+  //   console.log("scroll");
+  //   if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight) {
+  //     alert("At the bottom!");
+  //   }
+  // };
 
   return (
     <div className={classes.root}>
