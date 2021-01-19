@@ -183,7 +183,6 @@ export default function MiniDrawer() {
   const theme = useTheme();
   const [selectedIndex, setSelectedIndex] = React.useState();
   const [open, setOpen] = React.useState(false);
-  const [offset, setOffset] = useState(0);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
