@@ -251,16 +251,7 @@ export default function MiniDrawer() {
   useEffect(() => {
     GetCountryList();
     GetLastClicksStations();
-    window.onscroll = () => {
-      setOffset(window.pageYOffset);
-      if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight
-      ) {
-        alert("At the bottom!");
-      }
-    };
-  }, [offset]);
+  }, []);
 
   var newWindow = window;
   const openInNewTab = (url, name, favicon) => {
