@@ -1,1 +1,1 @@
-https://world-web-radio.netlify.app/
+https://world-web-radio-rs.netlify.app/
