@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-      width: "12ch",
+      width: "1ch",
       "&:focus": {
         width: "20ch",
       },
@@ -413,7 +413,7 @@ export default function MiniDrawer() {
               <Grid container justify="center" spacing={2}>
                 {stations
                   .sort((a, b) => b.clickcount - a.clickcount)
-                  .filter((item) => item.url_resolved.slice(-4) !== "m3u8")
+                  .filter((item) => item.url_resolved.slice(-4) !== "m3u8").slice(0,32)
                   .map((item) => (
                     <Card className={classes.rootCard} key={item.changeuuid}>
                       <div className={classes.details}>
